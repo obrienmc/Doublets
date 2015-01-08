@@ -1,0 +1,53 @@
+import java.util.Scanner;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		String filename = "english.cleaned.all.35.txt";
+		Doublets doublets = new Doublets(new Links(filename));
+		Scanner input = new Scanner(System.in);
+		
+		System.out.println("Welcome to Doublets.");
+		while(true){
+			System.out.println("Enter starting word: ");
+			String start = input.nextLine();
+			System.out.println("Enter ending word: ");
+			String end = input.nextLine();
+			if(!doublets.isInDictionary(start)){
+				System.out.println("The word " + start + " is invalid.");
+			}else if(!doublets.isInDictionary(end)){
+				System.out.println("The word " + end + " is invalid.");
+				
+			}else if(start.length() != end.length()){
+				System.out.println("The words need to be the same length. Try again!");
+			}
+			else{
+				System.out.println("Enter chain manager (s: stack, q: queue, x: exit): ");
+				String m = input.nextLine();
+				ChainManager manager;
+				if(m.equals("s")){
+					manager = new StackChainManager();
+				}else if(m.equals("q"))
+					manager = new QueueChainManager();
+				else{
+					System.out.println("Thanks for playing!");
+					break;
+				}
+				Chain chain = doublets.getChain(start, end, manager);
+				if(chain == null)
+					System.out.println("no solution");
+				else{
+					System.out.println(chain.toString());
+					System.out.println("Length: " + chain.length());
+					System.out.println("Candidates: " + manager.getNumberOfNexts());
+					System.out.println("Max Size: " + manager.maxSize() + "\n");
+				}
+			}
+			
+		}
+		input.close();
+
+	}
+
+}

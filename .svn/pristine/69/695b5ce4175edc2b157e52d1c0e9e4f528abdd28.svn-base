@@ -1,0 +1,59 @@
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+
+
+public class Chain implements Iterable<String>{
+	
+	LinkedList<String> wordChain;
+	Set<String> wordSet;
+	int length;
+	
+	public Chain(){
+		wordSet = new HashSet<String>();
+		wordChain = new LinkedList<String>();
+		length = 0;
+	}
+	
+	private Chain(LinkedList<String> list){
+		wordChain = list;
+	}
+	
+	public Chain addLast(String word){
+		@SuppressWarnings("unchecked")
+		LinkedList<String> newList = (LinkedList<String>) this.wordChain.clone();
+		newList.add(word);
+		Chain newChain = new Chain(newList);
+		newChain.length = this.length + 1;
+		return newChain;
+	}
+	
+	public String getLast(){
+		return wordChain.getLast();
+	}
+	
+	public int length(){
+		return this.length;
+	}
+	
+	public boolean contains(String s){
+		return this.wordChain.contains(s);
+	}
+	
+	public int getValue(String target){
+		int diff = 0;
+		String current = getLast();
+		for(int i = 0; i < target.length(); i++){
+			if(current.charAt(i) != target.charAt(i))
+				diff++;
+		}
+		return diff + this.length;
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		// TODO Auto-generated method stub
+		return wordChain.iterator();
+	}
+}

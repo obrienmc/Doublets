@@ -1,0 +1,22 @@
+/**
+ * Contains the general algorithm to search for doublets.
+ *
+ * @author Alia Robinson and Matthew O'Brien
+ *         Created Mar 18, 2011.
+ */
+public class Doublets {
+	Links dictionary;
+	
+	public Doublets(Links links){
+		dictionary = links;
+	}
+	
+	public Chain getChain(String start, String end, ChainManager mgr){
+		return null;
+	}
+	
+	public boolean isInDictionary(String word){
+		return dictionary.allCandidates.containsKey(word);
+	}
+	
+}

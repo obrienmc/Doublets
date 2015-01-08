@@ -1,0 +1,56 @@
+import java.util.PriorityQueue;
+
+
+public class PriorityQueueChainManager extends ChainManager {
+	
+	PriorityQueue<Entry> pqueue;
+	String target;
+	
+	public PriorityQueueChainManager(String str){
+		pqueue = new PriorityQueue<Entry>();
+		target = str;
+	}
+	
+	@Override
+	public void add(Chain chain) {
+		pqueue.offer(new Entry(chain, target));
+		if(pqueue.size()>this.maxSize())
+			this.setMaxSize(pqueue.size());
+
+	}
+
+	@Override
+	public Chain next() {
+		if(pqueue.isEmpty())
+			return null;
+		incrementNumNexts();
+		return pqueue.poll().chain;
+	}
+	
+	private class Entry implements Comparable<Entry>{
+		
+		Chain chain; // the chain this entry represents
+		String target; // the "goal" end word for this game
+		
+		public Entry(Chain ch, String s){
+			this.chain = ch;
+			this.target = s;
+		}
+		@Override
+		public int compareTo(Entry other) {
+			return this.getValue() - other.getValue();
+		}
+		
+		public int getValue(){
+			int diff = 0;
+			String current = this.chain.getLast();
+			for(int i = 0; i < target.length(); i++){
+				if(current.charAt(i) != target.charAt(i))
+					diff++;
+			}
+			return diff + this.chain.length;
+		}
+		
+	}
+
+}

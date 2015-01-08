@@ -1,0 +1,44 @@
+import java.util.Set;
+
+/**
+ * Contains the general algorithm to search for doublets.
+ *
+ * @author Alia Robinson and Matthew O'Brien
+ *         Created Mar 18, 2011.
+ */
+public class Doublets {
+	Links dictionary;
+	
+	public Doublets(Links links){
+		dictionary = links;
+	}
+	
+	public Chain getChain(String start, String end, ChainManager mgr){
+		Chain startChain = new Chain();
+		startChain = startChain.addLast(start);
+		mgr.add(startChain);
+		mgr.setMaxSize(1);
+		
+		Chain currentChain = startChain;
+		while(currentChain != null){
+			Set<String> candidateSet = dictionary.getCandidates(currentChain.getLast());
+			if(candidateSet == null){
+				return null;
+			}
+			for(String candidate : candidateSet){
+				if(candidate.equals(end)){
+					return currentChain.addLast(end);
+				}else if(!currentChain.contains(candidate)){
+					mgr.add(currentChain.addLast(candidate));
+				}
+			}
+			currentChain = mgr.next();
+		}
+		return null;
+	}
+	
+	public boolean isInDictionary(String word){
+		return dictionary.allCandidates.containsKey(word);
+	}
+	
+}

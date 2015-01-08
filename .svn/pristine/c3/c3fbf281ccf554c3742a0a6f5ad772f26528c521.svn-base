@@ -1,0 +1,40 @@
+import java.util.Scanner;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		String filename = "english.cleaned.all.10.txt";
+		Doublets doublets = new Doublets(new Links(filename));
+		
+		System.out.println("Welcome to Doublets.");
+		while(true){
+			Scanner input = new Scanner(System.in);
+			System.out.println("Enter starting word: ");
+			String start = input.nextLine();
+			System.out.println("Enter ending word: ");
+			String end = input.nextLine();
+			if(!doublets.isInDictionary(start)){
+				System.out.println("The word " + start + " is invalid.");
+			}else if(!doublets.isInDictionary(end)){
+				System.out.println("The word " + end + " is invalid.");
+			}else{
+				System.out.println("Enter chain manager (s: stack, q: queue, x: exit): ");
+				String m = input.nextLine();
+				ChainManager manager;
+				if(m.equals("s")){
+					manager = new StackChainManager();
+				}else if(m.equals("q"))
+					manager = new QueueChainManager();
+				else{
+					System.out.println("Thanks for playing!");
+					break;
+				}
+				doublets.getChain(start, end, manager);
+			}
+			
+		}
+
+	}
+
+}

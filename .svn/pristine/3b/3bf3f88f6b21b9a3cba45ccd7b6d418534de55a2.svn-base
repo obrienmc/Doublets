@@ -1,0 +1,73 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public class Links {
+
+	Map<String, Set<String>> allCandidates;
+
+	public Links(String filename) {
+		allCandidates = new HashMap<String, Set<String>>();
+		try {
+			populateCandidates(filename);
+		} catch (IOException e) {
+			System.out.print("Bad File");
+		}
+	}
+
+	public Set<String> getCandidates(String word) {
+		return allCandidates.get(word);
+	}
+
+	private void populateCandidates(String filename)
+			throws IOException {
+		HashSet<String> set = new HashSet<String>();
+		BufferedReader reader = new BufferedReader(new FileReader(filename));
+		String word;
+		
+		while ((word = reader.readLine()) != null) {
+			set.add(word);
+		}
+	
+		for(String s : set){
+			String tempString = s;
+			HashSet<String> wordset = new HashSet<String>();
+			for(int i = 0; i < s.length(); i++){
+				String start = s.substring(0, i);
+				String end = "";
+				if(i < s.length() - 1)
+					end = s.substring(i + 1);
+				for(int j = 97; j <= 122; j++){
+					tempString = start + (char)(j) + end; 
+					if(!tempString.equals(s) && set.contains(tempString))
+						wordset.add(tempString);
+				}
+			}
+			if (wordset.isEmpty())
+				allCandidates.put(s, null);
+			else
+				allCandidates.put(s, wordset);
+
+		}
+		reader.close();
+
+	}
+
+	/*private boolean isCandidate(String s1, String s2) {
+		
+		if (s1.length() != s2.length() || s1.equals(s2))
+			return false;
+		int count = 0; // keeps track of the number of chars that are different
+		for (int i = 0; i < s1.length(); i++) {
+			if (s1.charAt(i) != s2.charAt(i))
+				count++;
+			if (count > 1)
+				return false;
+		}
+		return true;
+	}*/
+}

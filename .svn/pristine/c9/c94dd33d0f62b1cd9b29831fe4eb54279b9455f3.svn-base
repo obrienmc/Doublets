@@ -1,0 +1,31 @@
+import java.util.Iterator;
+import java.util.LinkedList;
+
+
+public class Chain implements Iterable<String>{
+	
+	LinkedList<String> wordChain;
+	int length;
+	
+	public Chain(String word){
+		wordChain = new LinkedList<String>();
+		wordChain.add(word);
+	}
+	
+	private Chain(LinkedList<String> list){
+		wordChain = list;
+	}
+	
+	public Chain add(Chain chain, String word){
+		@SuppressWarnings("unchecked")
+		LinkedList<String> newList = (LinkedList<String>) chain.wordChain.clone();
+		newList.add(word);
+		return new Chain(newList);
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

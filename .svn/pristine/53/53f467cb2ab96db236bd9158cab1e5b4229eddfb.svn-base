@@ -1,0 +1,155 @@
+import java.util.HashMap;
+import java.util.Iterator;
+
+public class Chain implements Iterable<String> {
+
+	HashMap<String, Integer> wordChain; // A HashMap that has individual words
+										// as keys and position numbers as
+										// values in the chain. This structure
+										// preserves order while allowing
+										// constant access time.
+	int length; // The length of the chain.
+	String lastWord; // Last word in the current chain.
+
+	/**
+	 * Creates a new HashMap for the given chain, sets its length to 0 and its
+	 * last word to nothing.
+	 */
+	public Chain() {
+		wordChain = new HashMap<String, Integer>();
+		length = 0;
+		lastWord = "";
+	}
+
+	/**
+	 * Constructor used when returning a new chain after adding since they are
+	 * immutable.
+	 * 
+	 * @param Takes the current list as a parameter.
+	 */
+	private Chain(HashMap<String, Integer> list) {
+		wordChain = list;
+	}
+
+	/**
+	 * Since they are immutable, uses a clone and the second constructor to get
+	 * a new chain and then add on the new word.
+	 * 
+	 * @param Word to be added onto current chain.
+	 * @return A new chain with the added word.
+	 */
+	public Chain addLast(String word) {
+		@SuppressWarnings("unchecked")
+		HashMap<String, Integer> newList = (HashMap<String, Integer>) this.wordChain
+				.clone();
+		newList.put(word, this.length);
+		Chain newChain = new Chain(newList);
+		newChain.length = this.length + 1;
+		newChain.lastWord = word;
+		return newChain;
+	}
+
+	/**
+	 * Returns the last word in the chain.
+	 * 
+	 * @return the last word in the chain.
+	 */
+	public String getLast() {
+		return lastWord;
+	}
+
+	/**
+	 * Returns the last word in the chain.
+	 * 
+	 * @return the length of the chain. 
+	 */
+	public int length() {
+		return this.length;
+	}
+
+	/**
+	 * Checks to see if the word chain contains the given word.
+	 * 
+	 * @param Word
+	 *            that is checked to see if it is contained.
+	 * @return a boolean indicating whether or not it is contained.
+	 */
+	public boolean contains(String s) {
+		return this.wordChain.containsKey(s);
+	}
+
+	/**
+	 * Returns a chain iterator that is used in the to string method.
+	 */
+	@Override
+	public Iterator<String> iterator() {
+		return new ChainIterator(this.wordChain, this.length);
+
+	}
+
+	/**
+	 * To string method that uses a chain iterator and string builder.
+	 * 
+	 * @return the string version of the chain.
+	 */
+	public String toString() {
+		StringBuilder build = new StringBuilder();
+		build.append("[");
+		Iterator<String> iter = iterator();
+		while (iter.hasNext()) {
+			build.append(iter.next() + ", ");
+		}
+		return build.substring(0, build.length() - 2) + "]";
+	}
+
+}
+
+class ChainIterator implements Iterator<String> {
+
+	String[] wordList; // An array that is used to put the words proper order.
+	int current; // Used to indicate which word we are currently on in iteration.
+
+	/**
+	 * Fills out an array using the position values from the map to put the
+	 * words in order so we can iterate through them.
+	 * 
+	 * @param The HashMap that represents the chain words along with its
+	 *            position.
+	 * @param Thelength of the chain.
+	 */
+	public ChainIterator(HashMap<String, Integer> map, int length) {
+		wordList = new String[length];
+		for (String s : map.keySet()) {
+			wordList[map.get(s)] = s;
+		}
+		current = 0;
+	}
+
+	/**
+	 * @return A boolean that determines if it has a next or not based on where
+	 *         the current index is pointing.
+	 */
+	@Override
+	public boolean hasNext() {
+		return current < wordList.length;
+	}
+
+	/**
+	 * Returns the current word and moves the current index up one so it is
+	 * ready for the next call.
+	 * 
+	 * @return A word at the given index
+	 */
+	@Override
+	public String next() {
+		String s = wordList[current];
+		current++;
+		return s;
+	}
+
+	@Override
+	public void remove() {
+		// Do not remove things!
+	}
+
+}
